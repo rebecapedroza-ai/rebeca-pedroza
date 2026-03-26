@@ -140,7 +140,6 @@ async function detectCountryByIP() {
 }
 
 // ── NAVEGACIÓN ──
-const snap = document.getElementById('snap');
 const sections = document.querySelectorAll('.snap-section');
 const dots = document.querySelectorAll('.nav-dot');
 const progress = document.getElementById('progress');
@@ -155,9 +154,11 @@ dots.forEach(dot => {
   });
 });
 
-snap.addEventListener('scroll', () => {
-  const scrollTop = snap.scrollTop;
-  const total = snap.scrollHeight - snap.clientHeight;
+const scrollEl = document.scrollingElement || document.documentElement;
+
+window.addEventListener('scroll', () => {
+  const scrollTop = scrollEl.scrollTop;
+  const total = scrollEl.scrollHeight - scrollEl.clientHeight;
   progress.style.width = (scrollTop / total * 100) + '%';
   sections.forEach((section, i) => {
     const rect = section.getBoundingClientRect();
@@ -166,7 +167,7 @@ snap.addEventListener('scroll', () => {
       dots[i] && dots[i].classList.add('active');
     }
   });
-});
+}, { passive: true });
 
 // ── REVEAL ON SCROLL ──
 const observer = new IntersectionObserver((entries) => {
