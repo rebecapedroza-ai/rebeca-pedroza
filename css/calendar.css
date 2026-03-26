@@ -1,0 +1,40 @@
+/* ===========================
+   CALENDAR - Section 4
+   =========================== */
+
+#s4 {
+  overflow: hidden;
+}
+
+#s4 .section-inner {
+  padding: 5.5rem 1.5rem 1.5rem;
+  gap: 0.7rem;
+  height: 100%;
+  overflow: hidden;
+}
+
+.cal-wrap {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(201, 162, 74, 0.2);
+  background: var(--brown);
+  position: relative;
+}
+
+.cal-wrap > div {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+}
+
+@media (min-width: 768px) {
+  #s4 .section-inner {
+    padding: 5.5rem 4rem 1.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+  }
+}

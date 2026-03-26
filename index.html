@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="De limpiar baños a empresaria digital — Rebeca Pedroza"/>
+<title>Rebeca Pedroza</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:wght@200;300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css"/>
+<link rel="stylesheet" href="css/animations.css"/>
+<link rel="stylesheet" href="css/nav.css"/>
+<link rel="stylesheet" href="css/hero.css"/>
+<link rel="stylesheet" href="css/video.css"/>
+<link rel="stylesheet" href="css/modal.css"/>
+<link rel="stylesheet" href="css/success.css"/>
+<link rel="stylesheet" href="css/form.css"/>
+<link rel="stylesheet" href="css/calendar.css"/>
+<link rel="stylesheet" href="css/testimonials.css"/>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<nav id="nav">
+  <div class="nav-logo"><img src="assets/img/logo.png" alt="Rebeca Pedroza"/></div>
+  <div class="nav-dots">
+    <button class="nav-dot active" data-index="0"></button>
+    <button class="nav-dot" data-index="1"></button>
+    <button class="nav-dot" data-index="2"></button>
+    <button class="nav-dot" data-index="3"></button>
+    <button class="nav-dot" data-index="4"></button>
+  </div>
+</nav>
+
+<!-- SUCCESS SCREEN -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-content">
+    <div class="success-icon">✓</div>
+    <div class="success-eyebrow">¡Estás dentro!</div>
+    <h2 class="success-title">
+      Tu primer paso<br>
+      hacia la <em>libertad</em><br>
+      ya está dado.
+    </h2>
+    <p class="success-sub">
+      En segundos te llevamos al calendario de Rebeca para que agendes tu llamada de descubrimiento — una conversación personal donde entenderemos tu situación y te mostraremos exactamente cómo empezar.
+    </p>
+    <div class="success-countdown">
+      <span class="success-countdown-num" id="countdownNum">10</span>
+      <span class="success-countdown-label">segundos para tu cita</span>
+    </div>
+    <button class="success-btn" onclick="goToCalendar()">
+      Agendar mi llamada ahora →
+    </button>
+  </div>
+</div>
+
+<div class="snap-container" id="snap">
+
+  <section class="snap-section" id="s1">
+    <div class="hero-particles" id="particles"></div>
+    <div class="hero-photo-wrap">
+      <div class="hero-photo-glow"></div>
+      <div class="hero-photo-main">
+        <img src="assets/img/rebeca-now.png" alt="Rebeca Pedroza" onerror="this.style.display='none'"/>
+      </div>
+      <div class="hero-photo-fade"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Historia real · Rebeca Pedroza</div>
+      <h1 class="hero-h1">
+        De limpiar<br>
+        baños a<br>
+        <em>empresaria</em><br>
+        digital.
+      </h1>
+      <p class="hero-p">Construí ingresos reales desde cero — sin experiencia previa, sin inversión enorme.</p>
+      <button class="hero-cta" onclick="goTo(1)">
+        Ver mi historia <span class="arrow">→</span>
+      </button>
+    </div>
+    <div class="hero-banner">
+      <p><em>"La pobreza es fea — <strong>y no la mereces.</strong>"</em> <span class="banner-by">— Rebeca Pedroza</span></p>
+    </div>
+  </section>
+
+  <section class="snap-section" id="s2">
+    <div class="section-inner">
+      <span class="eyebrow reveal">Paso 1 de 3</span>
+      <h2 class="section-h2 reveal">Mira este video<br><em>antes de seguir</em></h2>
+      <p class="section-sub reveal">3 minutos que pueden cambiar tu situación financiera.</p>
+      <div class="video-wrap reveal">
+        <div class="video-overlay" id="voverlay" onclick="this.style.display='none'">
+          <div class="play-btn"><div class="play-tri"></div></div>
+          <span class="play-label">Ver presentación completa</span>
+        </div>
+        <iframe src="https://www.youtube.com/embed/2jN3FkM86qM?rel=0&enablejsapi=1&modestbranding=1&showinfo=0&iv_load_policy=3&fs=0" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+      </div>
+      <p class="scroll-hint reveal">Continuá al paso 2 ↓</p>
+    </div>
+  </section>
+
+  <section class="snap-section" id="s3">
+    <div class="section-inner">
+      <span class="eyebrow reveal">Paso 2 de 3</span>
+      <h2 class="section-h2 reveal">Dejame<br><em>tus datos</em></h2>
+      <p class="section-sub reveal">Solo 60 segundos — el primer paso real.</p>
+      <div class="form-wrap">
+        <div class="field reveal">
+          <label>Nombre completo</label>
+          <input type="text" id="form-nombre" placeholder="¿Cómo te llaman?"/>
+        </div>
+        <div class="field reveal">
+          <label>Email</label>
+          <input type="email" id="form-email" placeholder="tu@email.com"/>
+        </div>
+        <div class="field reveal">
+          <label>WhatsApp</label>
+          <div class="phone-wrap">
+            <div class="country-selector">
+              <button class="country-btn" id="country-btn" onclick="toggleDropdown()" type="button">
+                <span class="country-flag" id="selected-flag">🇨🇴</span>
+                <span class="country-code" id="selected-code">+57</span>
+                <span class="country-arrow">▼</span>
+              </button>
+              <div class="country-dropdown" id="country-dropdown">
+                <input class="country-search" id="country-search" placeholder="Buscar país..." oninput="filterCountries(this.value)" />
+                <div class="country-list" id="country-list"></div>
+              </div>
+            </div>
+            <div class="phone-input">
+              <input type="tel" id="form-whatsapp" placeholder="300 000 0000" />
+            </div>
+          </div>
+        </div>
+        <div class="qualify reveal">
+          <p class="qualify-q">¿Cuánto tiempo podés dedicarle por día?</p>
+          <div class="pills" id="pills-tiempo">
+            <span class="pill" onclick="selectPill(this)">1–2 horas</span>
+            <span class="pill" onclick="selectPill(this)">3–4 horas</span>
+            <span class="pill" onclick="selectPill(this)">Medio tiempo</span>
+            <span class="pill" onclick="selectPill(this)">Full time</span>
+          </div>
+        </div>
+        <div class="qualify reveal">
+          <p class="qualify-q">¿Experiencia en ventas digitales?</p>
+          <div class="pills" id="pills-experiencia">
+            <span class="pill" onclick="selectPill(this)">Sí, ya vendí</span>
+            <span class="pill" onclick="selectPill(this)">No, soy nuevo/a</span>
+            <span class="pill" onclick="selectPill(this)">Algo básico</span>
+          </div>
+        </div>
+        <button class="btn-primary reveal" id="form-submit-btn" onclick="submitForm()">Quiero agendar mi llamada →</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="snap-section" id="s4">
+    <div class="section-inner">
+      <span class="eyebrow reveal">Paso 3 de 3</span>
+      <h2 class="section-h2 reveal">Agenda tu<br><em>llamada gratuita</em></h2>
+      <p class="section-sub reveal">Esta llamada es de 10 minutos y es para darte el valor de la inversión en nuestro programa · 100% gratuita.</p>
+      <div class="cal-wrap reveal">
+        <div style="width:100%;height:100%;overflow:scroll" id="my-cal-inline-llamada-de-descubrimiento"></div>
+      </div>
+      <a href="https://group.wha.link/bWQ6oe" target="_blank" rel="noopener noreferrer" class="btn-whatsapp reveal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.117.549 4.103 1.513 5.831L.057 23.882a.5.5 0 00.611.611l6.051-1.456A11.951 11.951 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.907 0-3.693-.516-5.224-1.415l-.374-.22-3.862.929.929-3.862-.22-.374A9.953 9.953 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        Unirme a la comunidad de WhatsApp
+      </a>
+      <p class="ai-note reveal">La llamada es con nuestro equipo · Dura 10 min aprox. · 100% gratuita</p>
+    </div>
+  </section>
+
+  <section class="snap-section" id="s5">
+    <div class="section-inner">
+
+      <span class="eyebrow reveal">Resultados reales</span>
+      <h2 class="section-h2 reveal">Personas que ya<br><em>lo lograron</em></h2>
+
+      <div class="impact-bar reveal">
+        <div class="impact-item">
+          <span class="impact-num">200+</span>
+          <span class="impact-label">Personas</span>
+        </div>
+        <div class="impact-divider"></div>
+        <div class="impact-item">
+          <span class="impact-num">8</span>
+          <span class="impact-label">Países</span>
+        </div>
+        <div class="impact-divider"></div>
+        <div class="impact-item">
+          <span class="impact-num">+$1K</span>
+          <span class="impact-label">Primer ingreso</span>
+        </div>
+      </div>
+
+      <div class="testi-grid">
+        <div class="testi-card reveal" onclick="openVideoModal('OBjlnbHcjGM')">
+          <div class="testi-thumb">
+            <img src="https://i.ytimg.com/vi/OBjlnbHcjGM/hqdefault.jpg" alt="Claudia - USA"/>
+            <div class="testi-play"><div class="testi-play-tri"></div></div>
+          </div>
+          <div class="testi-flag">🇺🇸 USA</div>
+          <div class="testi-body">
+            <div class="testi-result">$1,000 USD</div>
+            <div class="testi-name">Claudia — menos de 24 horas</div>
+          </div>
+        </div>
+        <div class="testi-card reveal" onclick="openVideoModal('0oQ1b-w6K6s')">
+          <div class="testi-thumb">
+            <img src="https://i.ytimg.com/vi/0oQ1b-w6K6s/hqdefault.jpg" alt="Albaris - Brasil"/>
+            <div class="testi-play"><div class="testi-play-tri"></div></div>
+          </div>
+          <div class="testi-flag">🇧🇷 Brasil</div>
+          <div class="testi-body">
+            <div class="testi-result">$600 USD/sem</div>
+            <div class="testi-name">Albaris — menos de 3 meses</div>
+          </div>
+        </div>
+        <div class="testi-card reveal" onclick="openVideoModal('gKRWUC2A53o')">
+          <div class="testi-thumb">
+            <img src="https://i.ytimg.com/vi/gKRWUC2A53o/hqdefault.jpg" alt="Carlos - Venezuela"/>
+            <div class="testi-play"><div class="testi-play-tri"></div></div>
+          </div>
+          <div class="testi-flag">🇻🇪 Venezuela</div>
+          <div class="testi-body">
+            <div class="testi-result">$240 USD/día</div>
+            <div class="testi-name">Carlos — primera semana</div>
+          </div>
+        </div>
+        <div class="testi-card reveal" onclick="openVideoModal('4ZA4gyfnfV4')">
+          <div class="testi-thumb">
+            <img src="https://i.ytimg.com/vi/4ZA4gyfnfV4/hqdefault.jpg" alt="Laura - España"/>
+            <div class="testi-play"><div class="testi-play-tri"></div></div>
+          </div>
+          <div class="testi-flag">🇪🇸 España</div>
+          <div class="testi-body">
+            <div class="testi-result">€100/día</div>
+            <div class="testi-name">Laura — primer mes</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="countries-bar reveal">
+        <span class="countries-label">Presentes en</span>
+        <span class="country-flag-item">🇨🇴</span>
+        <span class="country-flag-item">🇲🇽</span>
+        <span class="country-flag-item">🇦🇷</span>
+        <span class="country-flag-item">🇻🇪</span>
+        <span class="country-flag-item">🇧🇷</span>
+        <span class="country-flag-item">🇺🇸</span>
+        <span class="country-flag-item">🇪🇸</span>
+        <span class="country-flag-item">🇨🇱</span>
+      </div>
+
+      <div class="final-cta reveal">
+        <p class="final-tag">¡AGENDA UNA LLAMADA CON MI EQUIPO!</p>
+        <h3>¡Quiero empezar yá!<br></h3>
+        <button class="btn-dark" onclick="goTo(2)">Registrarme ahora →</button>
+      </div>
+
+      <footer>
+        <span class="footer-logo">Rebeca Pedroza</span>
+        <p class="footer-copy">© 2026  · Todos los derechos reservados</p>
+      </footer>
+
+    </div>
+  </section>
+
+</div>
+
+<!-- VIDEO MODAL TESTIMONIOS -->
+<div class="testi-modal-overlay" id="testiModal" onclick="closeVideoModal()">
+  <div class="testi-modal-inner" onclick="event.stopPropagation()">
+    <button class="testi-modal-close" onclick="closeVideoModal()">✕</button>
+    <div class="testi-modal-video">
+      <iframe id="testiIframe" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+  Cal("init", "llamada-de-descubrimiento", {origin:"https://app.cal.com"});
+  Cal.ns["llamada-de-descubrimiento"]("inline", {
+    elementOrSelector:"#my-cal-inline-llamada-de-descubrimiento",
+    config: {"layout":"month_view","useSlotsViewOnSmallScreen":"true"},
+    calLink: "conecta2.ai/llamada-de-descubrimiento",
+  });
+  Cal.ns["llamada-de-descubrimiento"]("ui", {"cssVarsPerTheme":{"dark":{"cal-brand":"#F5EDE1"}},"hideEventTypeDetails":true,"layout":"month_view"});
+</script>
+<script src="js/main.js"></script>
+</body>
+</html>
