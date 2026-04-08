@@ -45,3 +45,8 @@
     width: 100%;
   }
 }
+
+#s4 .section-sub,
+#s4 .ai-note {
+  color: #ffffff;
+}
