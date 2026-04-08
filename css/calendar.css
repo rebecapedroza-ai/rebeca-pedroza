@@ -38,21 +38,3 @@
     width: 100%;
   }
 }
-
-/* Fix scroll interno Cal.com en iOS */
-.cal-wrap {
-  -webkit-overflow-scrolling: touch;
-  overflow: auto;
-}
-
-.cal-wrap > div {
-  -webkit-overflow-scrolling: touch;
-  overflow: auto;
-  touch-action: pan-y;
-}
-
-#my-cal-inline-llamada-de-descubrimiento {
-  overflow: auto !important;
-  -webkit-overflow-scrolling: touch !important;
-  touch-action: pan-y !important;
-}

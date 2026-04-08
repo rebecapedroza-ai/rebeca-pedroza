@@ -32,7 +32,6 @@ const COUNTRIES = [
 let selectedCountry = COUNTRIES[0];
 let modalSelectedCountry = COUNTRIES[0];
 
-// ── RENDERIZAR LISTA ──
 function renderCountryList(listId, list, currentCode) {
   const container = document.getElementById(listId);
   if (!container) return;
@@ -48,24 +47,19 @@ function renderCountryList(listId, list, currentCode) {
 
 function filterCountries(query) {
   const q = query.toLowerCase();
-  const filtered = COUNTRIES.filter(c =>
-    c.name.toLowerCase().includes(q) || c.dial.includes(q)
-  );
+  const filtered = COUNTRIES.filter(c => c.name.toLowerCase().includes(q) || c.dial.includes(q));
   renderCountryList('country-list', filtered, selectedCountry.code);
 }
 
 function filterModalCountries(query) {
   const q = query.toLowerCase();
-  const filtered = COUNTRIES.filter(c =>
-    c.name.toLowerCase().includes(q) || c.dial.includes(q)
-  );
+  const filtered = COUNTRIES.filter(c => c.name.toLowerCase().includes(q) || c.dial.includes(q));
   renderCountryList('modal-country-list', filtered, modalSelectedCountry.code);
 }
 
 function selectCountry(code, listId) {
   const country = COUNTRIES.find(c => c.code === code);
   if (!country) return;
-
   if (listId === 'country-list') {
     selectedCountry = country;
     document.getElementById('selected-flag').textContent = country.flag;
@@ -113,14 +107,11 @@ function closeDropdown(ddId, searchId) {
 
 document.addEventListener('click', (e) => {
   const sel = document.querySelector('.country-selector');
-  if (sel && !sel.contains(e.target)) {
-    closeDropdown('country-dropdown', 'country-search');
-  }
+  if (sel && !sel.contains(e.target)) closeDropdown('country-dropdown', 'country-search');
   const modal = document.getElementById('videoModal');
   if (modal && e.target === modal) hideModal();
 });
 
-// ── DETECTAR PAÍS POR IP ──
 async function detectCountryByIP() {
   try {
     const res = await fetch('https://ipapi.co/json/');
@@ -149,9 +140,7 @@ function goTo(index) {
 }
 
 dots.forEach(dot => {
-  dot.addEventListener('click', () => {
-    goTo(parseInt(dot.dataset.index));
-  });
+  dot.addEventListener('click', () => goTo(parseInt(dot.dataset.index)));
 });
 
 const scrollEl = document.scrollingElement || document.documentElement;
@@ -169,16 +158,15 @@ window.addEventListener('scroll', () => {
   });
 }, { passive: true });
 
-// ── REVEAL ON SCROLL ──
+// ── REVEAL ──
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) entry.target.classList.add('visible');
   });
 }, { threshold: 0.08 });
-
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-// ── PARTÍCULAS DORADAS ──
+// ── PARTÍCULAS ──
 function createParticles() {
   const container = document.getElementById('particles');
   if (!container) return;
@@ -186,34 +174,21 @@ function createParticles() {
     const p = document.createElement('div');
     p.classList.add('particle');
     const size = Math.random() * 3 + 1.5;
-    p.style.cssText = `
-      left: ${Math.random() * 100}%;
-      bottom: ${Math.random() * 20}%;
-      width: ${size}px;
-      height: ${size}px;
-      --dur: ${Math.random() * 8 + 5}s;
-      --delay: ${Math.random() * 6}s;
-      opacity: 0;
-    `;
+    p.style.cssText = `left:${Math.random()*100}%;bottom:${Math.random()*20}%;width:${size}px;height:${size}px;--dur:${Math.random()*8+5}s;--delay:${Math.random()*6}s;opacity:0;`;
     container.appendChild(p);
   }
 }
 createParticles();
 
-// ── ENVIAR A GOOGLE SHEETS ──
+// ── SHEETS ──
 async function sendToSheets(data) {
   try {
     await fetch(SHEETS_URL, {
-      method: 'POST',
-      mode: 'no-cors',
+      method: 'POST', mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     });
-    return true;
-  } catch (err) {
-    console.error('Error enviando a Sheets:', err);
-    return false;
-  }
+  } catch (err) { console.error('Error Sheets:', err); }
 }
 
 function selectPill(el) {
@@ -226,11 +201,10 @@ function selectPill(el) {
 function getSelectedPills(containerId) {
   const container = document.getElementById(containerId);
   if (!container) return '';
-  return Array.from(container.querySelectorAll('.pill.active'))
-    .map(p => p.textContent.trim()).join(', ');
+  return Array.from(container.querySelectorAll('.pill.active')).map(p => p.textContent.trim()).join(', ');
 }
 
-// ── SUBMIT FORM S3 ──
+// ── SUBMIT FORM ──
 async function submitForm() {
   const nombre   = document.getElementById('form-nombre')?.value.trim();
   const email    = document.getElementById('form-email')?.value.trim();
@@ -239,40 +213,31 @@ async function submitForm() {
   const tiempo      = getSelectedPills('pills-tiempo');
   const experiencia = getSelectedPills('pills-experiencia');
 
-  if (!nombre || !email || !numero) {
-    alert('Por favor completá todos los campos.');
-    return;
-  }
+  if (!nombre || !email || !numero) { alert('Por favor completá todos los campos.'); return; }
 
   const btn = document.getElementById('form-submit-btn');
   btn.textContent = 'Enviando...';
   btn.disabled = true;
 
-  // Enviar a Sheets en background sin bloquear la UX
   sendToSheets({ nombre, email, whatsapp, tiempo, experiencia });
-
   sessionStorage.setItem('formCompleted', '1');
   sessionStorage.setItem('leadData', JSON.stringify({ nombre, email, whatsapp }));
-
   setTimeout(() => showSuccess(), 600);
 }
 
-// ── SUCCESS SCREEN ──
+// ── SUCCESS ──
 function showSuccess() {
   const overlay = document.getElementById('successOverlay');
   if (!overlay) return;
   overlay.classList.add('visible');
-  startCountdown(5);
+  startCountdown(10);
 }
 
 function startCountdown(seconds) {
   const num = document.getElementById('countdownNum');
   if (!num) return;
   num.textContent = seconds;
-  if (seconds <= 0) {
-    goToCalendar();
-    return;
-  }
+  if (seconds <= 0) { goToCalendar(); return; }
   setTimeout(() => startCountdown(seconds - 1), 1000);
 }
 
@@ -306,7 +271,7 @@ function hideToast() {
   sessionStorage.setItem('toastDismissed', '1');
 }
 
-// ── MODAL ──
+// ── MODAL VIDEO ──
 function createModal() {
   const modal = document.createElement('div');
   modal.className = 'video-modal-overlay';
@@ -380,17 +345,13 @@ async function submitModal() {
   const numero   = document.getElementById('modal-whatsapp')?.value.trim();
   const whatsapp = modalSelectedCountry.dial.replace('+', '') + ' ' + numero;
 
-  if (!nombre || !email || !numero) {
-    alert('Por favor completá todos los campos.');
-    return;
-  }
+  if (!nombre || !email || !numero) { alert('Por favor completá todos los campos.'); return; }
 
   const btn = document.getElementById('modal-submit-btn');
   btn.textContent = 'Enviando...';
   btn.disabled = true;
 
   sendToSheets({ nombre, email, whatsapp, tiempo: 'modal video', experiencia: 'modal video' });
-
   sessionStorage.setItem('formCompleted', '1');
   hideModal();
   setTimeout(() => showSuccess(), 400);
@@ -403,7 +364,6 @@ function openVideoModal(videoId) {
   if (!overlay || !iframe) return;
   iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
   overlay.classList.add('visible');
-  document.body.style.overflow = 'hidden';
 }
 
 function closeVideoModal() {
@@ -412,10 +372,8 @@ function closeVideoModal() {
   if (!overlay || !iframe) return;
   iframe.src = '';
   overlay.classList.remove('visible');
-  document.body.style.overflow = '';
 }
 
-// Cerrar con ESC
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeVideoModal();
 });
@@ -450,32 +408,10 @@ function startProgressCheck() {
     const current = player.getCurrentTime();
     const duration = player.getDuration() || 132;
     const percent = current / duration;
-    if (current >= 30 && !toastShown && !sessionStorage.getItem('toastDismissed')) {
-      toastShown = true; showToast();
-    }
-    if (percent >= 0.8 && !modalShown && !sessionStorage.getItem('modalDismissed')) {
-      modalShown = true; showModal();
-    }
+    if (current >= 30 && !toastShown && !sessionStorage.getItem('toastDismissed')) { toastShown = true; showToast(); }
+    if (percent >= 0.8 && !modalShown && !sessionStorage.getItem('modalDismissed')) { modalShown = true; showModal(); }
     if (videoCompleted) clearInterval(interval);
   }, 1000);
-}
-
-// ── PAUSAR SNAP CUANDO EL USUARIO TOCA EL CALENDARIO ──
-function initCalendarScrollFix() {
-  const calWrap = document.querySelector('.cal-wrap');
-  if (!calWrap) return;
-
-  calWrap.addEventListener('touchstart', () => {
-    document.body.style.overscrollBehavior = 'none';
-    document.body.style.scrollSnapType = 'none';
-  }, { passive: true });
-
-  calWrap.addEventListener('touchend', () => {
-    setTimeout(() => {
-      document.body.style.scrollSnapType = 'y mandatory';
-      document.body.style.overscrollBehavior = '';
-    }, 300);
-  }, { passive: true });
 }
 
 // ── INICIALIZAR ──
@@ -483,8 +419,6 @@ document.addEventListener('DOMContentLoaded', () => {
   createToast();
   createModal();
   detectCountryByIP();
-  initCalendarScrollFix();
-
   const tag = document.createElement('script');
   tag.src = 'https://www.youtube.com/iframe_api';
   document.head.appendChild(tag);
