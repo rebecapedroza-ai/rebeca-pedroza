@@ -460,11 +460,31 @@ function startProgressCheck() {
   }, 1000);
 }
 
+// ── PAUSAR SNAP CUANDO EL USUARIO TOCA EL CALENDARIO ──
+function initCalendarScrollFix() {
+  const calWrap = document.querySelector('.cal-wrap');
+  if (!calWrap) return;
+
+  calWrap.addEventListener('touchstart', () => {
+    document.body.style.overscrollBehavior = 'none';
+    document.body.style.scrollSnapType = 'none';
+  }, { passive: true });
+
+  calWrap.addEventListener('touchend', () => {
+    setTimeout(() => {
+      document.body.style.scrollSnapType = 'y mandatory';
+      document.body.style.overscrollBehavior = '';
+    }, 300);
+  }, { passive: true });
+}
+
 // ── INICIALIZAR ──
 document.addEventListener('DOMContentLoaded', () => {
   createToast();
   createModal();
   detectCountryByIP();
+  initCalendarScrollFix();
+
   const tag = document.createElement('script');
   tag.src = 'https://www.youtube.com/iframe_api';
   document.head.appendChild(tag);
