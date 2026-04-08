@@ -161,16 +161,18 @@
       <span class="eyebrow reveal">Paso 3 de 3</span>
       <h2 class="section-h2 reveal">Agenda tu<br><em>llamada gratuita</em></h2>
       <p class="section-sub reveal">Esta llamada es de 10 minutos y es para darte el valor de la inversión en nuestro programa · 100% gratuita.</p>
-      <div class="cal-wrap reveal">
-        <div style="width:100%;min-height:600px;overflow:auto;-webkit-overflow-scrolling:touch;" id="my-cal-inline-llamada-de-descubrimiento"></div>
-      </div>
+
+      <a href="https://cal.com/conecta2.ai/llamada-de-descubrimiento" target="_blank" rel="noopener noreferrer" class="btn-primary reveal">
+        Seleccionar mi horario →
+      </a>
+
       <p class="ai-note reveal">La llamada es con nuestro equipo · Dura 10 min aprox. · 100% gratuita</p>
 
-      <!-- Aparece solo después de agendar -->
-      <div id="whatsapp-post-booking" style="display:none;">
+      <!-- Después de agendar -->
+      <div id="whatsapp-post-booking">
         <div class="booking-success-msg">
           <span class="booking-success-icon">✓</span>
-          <p>¡Llamada agendada! Únete ahora a nuestra comunidad para recibir contenido exclusivo mientras esperas.</p>
+          <p>¡Llamada agendada! Únete a nuestra comunidad para recibir contenido exclusivo mientras esperas.</p>
         </div>
         <a href="https://group.wha.link/bWQ6oe" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.117.549 4.103 1.513 5.831L.057 23.882a.5.5 0 00.611.611l6.051-1.456A11.951 11.951 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.907 0-3.693-.516-5.224-1.415l-.374-.22-3.862.929.929-3.862-.22-.374A9.953 9.953 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
@@ -281,16 +283,7 @@
   </div>
 </div>
 
-<script type="text/javascript">
-  (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
-  Cal("init", "llamada-de-descubrimiento", {origin:"https://app.cal.com"});
-  Cal.ns["llamada-de-descubrimiento"]("inline", {
-    elementOrSelector:"#my-cal-inline-llamada-de-descubrimiento",
-    config: {"layout":"month_view","useSlotsViewOnSmallScreen":"true"},
-    calLink: "conecta2.ai/llamada-de-descubrimiento",
-  });
-  Cal.ns["llamada-de-descubrimiento"]("ui", {"cssVarsPerTheme":{"dark":{"cal-brand":"#F5EDE1"}},"hideEventTypeDetails":true,"layout":"month_view"});
-</script>
+
 <script src="js/main.js"></script>
 </body>
 </html>
