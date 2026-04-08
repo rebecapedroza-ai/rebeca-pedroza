@@ -373,9 +373,7 @@ function closeVideoModal() {
   overlay.classList.remove('visible');
 }
 
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeVideoModal();
-});
+
 
 // ── YOUTUBE API ──
 let player, toastShown = false, modalShown = false, videoCompleted = false;
@@ -412,6 +410,50 @@ function startProgressCheck() {
     if (videoCompleted) clearInterval(interval);
   }, 1000);
 }
+
+// ── CAL MODAL ──
+let calLoaded = false;
+
+function openCalModal() {
+  const overlay = document.getElementById('cal-modal-overlay');
+  overlay.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+
+  if (!calLoaded) {
+    calLoaded = true;
+    Cal.ns["llamada-de-descubrimiento"]("inline", {
+      elementOrSelector: "#cal-modal-container",
+      calLink: "conecta2.ai/llamada-de-descubrimiento",
+      config: { layout: "month_view", useSlotsViewOnSmallScreen: "true" }
+    });
+
+    Cal.ns["llamada-de-descubrimiento"]("on", {
+      action: "bookingSuccessfulV2",
+      callback: () => {
+        closeCalModal();
+        const wp = document.getElementById('whatsapp-post-booking');
+        if (wp) {
+          wp.style.display = 'block';
+          setTimeout(() => wp.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300);
+        }
+      }
+    });
+  }
+}
+
+function closeCalModal() {
+  const overlay = document.getElementById('cal-modal-overlay');
+  overlay.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+// Cerrar con ESC
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeCalModal();
+    closeVideoModal();
+  }
+});
 
 // ── INICIALIZAR ──
 document.addEventListener('DOMContentLoaded', () => {
