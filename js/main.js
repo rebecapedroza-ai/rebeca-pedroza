@@ -143,11 +143,11 @@ dots.forEach(dot => {
   dot.addEventListener('click', () => goTo(parseInt(dot.dataset.index)));
 });
 
-const scrollEl = document.scrollingElement || document.documentElement;
+const snapContainer = document.getElementById('snap');
 
-window.addEventListener('scroll', () => {
-  const scrollTop = scrollEl.scrollTop;
-  const total = scrollEl.scrollHeight - scrollEl.clientHeight;
+snapContainer.addEventListener('scroll', () => {
+  const scrollTop = snapContainer.scrollTop;
+  const total = snapContainer.scrollHeight - snapContainer.clientHeight;
   progress.style.width = (scrollTop / total * 100) + '%';
   sections.forEach((section, i) => {
     const rect = section.getBoundingClientRect();
