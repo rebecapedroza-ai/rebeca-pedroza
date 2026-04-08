@@ -12,7 +12,10 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { height: 100%; }
+html {
+  scroll-behavior: smooth;
+  height: 100%;
+}
 
 body {
   background: var(--black);
@@ -21,29 +24,24 @@ body {
   font-weight: 300;
   overflow-x: hidden;
   height: 100%;
-}
-
-.snap-container {
-  height: 100dvh;
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   -webkit-overflow-scrolling: touch;
 }
 
+.snap-container {
+  height: auto;
+}
+
 .snap-section {
   scroll-snap-align: start;
   scroll-snap-stop: always;
+  height: 100vh;
   height: 100dvh;
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-}
-
-/* Secciones con contenido scrolleable */
-#s3, #s4 {
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
 }
 
 .section-inner {
@@ -144,4 +142,9 @@ body {
 
 @media (min-width: 768px) {
   .section-inner { padding: 5rem 3rem; }
+}
+
+#s3, #s4 {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
