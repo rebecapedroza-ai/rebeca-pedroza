@@ -22,25 +22,14 @@ body {
 }
 
 .snap-container {
-  height: 100dvh;
-  overflow-y: scroll;
-  scroll-snap-type: y mandatory;
-  -webkit-overflow-scrolling: touch;
+  /* Sin scroll snap — página normal */
 }
 
 .snap-section {
-  scroll-snap-align: start;
-  height: 100dvh;
-  min-height: -webkit-fill-available;
+  min-height: 100dvh;
   position: relative;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
-}
-
-#s3, #s4 {
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
 }
 
 .section-inner {
