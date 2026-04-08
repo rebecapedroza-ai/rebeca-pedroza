@@ -6,20 +6,17 @@
 
 .cal-wrap {
   width: 100%;
-  flex: 1;
-  min-height: 0;
+  min-height: 500px;
   border-radius: 12px;
-  overflow: hidden;
   border: 1px solid rgba(201, 162, 74, 0.2);
   background: var(--brown);
-  position: relative;
+  overflow: visible;
 }
 
 .cal-wrap > div {
-  position: absolute;
-  inset: 0;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  min-height: 500px;
+  overflow: visible;
 }
 
 @media (min-width: 768px) {
@@ -28,5 +25,9 @@
     max-width: 900px;
     margin: 0 auto;
     width: 100%;
+  }
+
+  .cal-wrap {
+    min-height: 600px;
   }
 }

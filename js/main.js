@@ -136,22 +136,21 @@ const dots = document.querySelectorAll('.nav-dot');
 const progress = document.getElementById('progress');
 
 function goTo(index) {
-  sections[index].scrollIntoView({ behavior: 'smooth' });
+  const top = sections[index].getBoundingClientRect().top + window.scrollY;
+  window.scrollTo({ top, behavior: 'smooth' });
 }
 
 dots.forEach(dot => {
   dot.addEventListener('click', () => goTo(parseInt(dot.dataset.index)));
 });
 
-const snapContainer = document.getElementById('snap');
-
-snapContainer.addEventListener('scroll', () => {
-  const scrollTop = snapContainer.scrollTop;
-  const total = snapContainer.scrollHeight - snapContainer.clientHeight;
+window.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY;
+  const total = document.body.scrollHeight - window.innerHeight;
   progress.style.width = (scrollTop / total * 100) + '%';
   sections.forEach((section, i) => {
     const rect = section.getBoundingClientRect();
-    if (rect.top <= 10 && rect.bottom >= 10) {
+    if (rect.top <= 100 && rect.bottom >= 100) {
       dots.forEach(d => d.classList.remove('active'));
       dots[i] && dots[i].classList.add('active');
     }
