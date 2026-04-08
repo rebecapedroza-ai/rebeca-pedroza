@@ -152,7 +152,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
 }
 
 .hero-banner p {
@@ -212,18 +211,12 @@
 
   .hero-banner {
     padding: 0.75rem 1rem;
-    white-space: normal;
-    flex-wrap: wrap;
-    gap: 0.3rem;
   }
 
   .hero-banner p {
     font-size: clamp(0.82rem, 4vw, 1.1rem);
-    white-space: normal;
-    flex-wrap: wrap;
-    justify-content: center;
-    text-align: center;
-    gap: 0.3rem;
+    white-space: nowrap;
+    flex-wrap: nowrap;
   }
 
   .hero-banner .banner-by { font-size: 0.55rem; }

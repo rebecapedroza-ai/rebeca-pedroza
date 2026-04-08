@@ -12,10 +12,7 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html, body {
-  height: 100%;
-  overflow: hidden;
-}
+html { height: 100%; }
 
 body {
   background: var(--black);
@@ -23,10 +20,10 @@ body {
   font-family: var(--sans);
   font-weight: 300;
   overflow-x: hidden;
+  height: 100%;
 }
 
 .snap-container {
-  height: 100%;
   height: 100dvh;
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
@@ -36,7 +33,6 @@ body {
 .snap-section {
   scroll-snap-align: start;
   scroll-snap-stop: always;
-  height: 100%;
   height: 100dvh;
   position: relative;
   overflow: hidden;
@@ -44,9 +40,10 @@ body {
   flex-direction: column;
 }
 
-/* La sección del calendario NO bloquea overflow interno */
-#s4 {
-  overflow: visible;
+/* Secciones con contenido scrolleable */
+#s3, #s4 {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .section-inner {

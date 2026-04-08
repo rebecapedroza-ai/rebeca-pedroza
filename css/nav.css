@@ -59,18 +59,6 @@
     padding: 0.6rem 1.2rem;
     background: rgba(10,6,4,0.97);
   }
-
-  .nav-logo {
-    grid-column: 2;
-    justify-content: center;
-  }
-
-  .nav-dots {
-    grid-column: 3;
-    justify-content: flex-end;
-    gap: 5px;
-  }
-
   .nav-logo img { height: 44px; }
   .nav-dot { width: 6px; height: 6px; }
 }
