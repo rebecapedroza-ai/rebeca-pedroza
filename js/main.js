@@ -413,6 +413,33 @@ function startProgressCheck() {
   }, 1000);
 }
 
+// ── CAL.COM BOOKING EVENT ──
+function initCalBookingListener() {
+  Cal.ns["llamada-de-descubrimiento"]("on", {
+    action: "bookingSuccessfulV2",
+    callback: () => {
+      const whatsappDiv = document.getElementById('whatsapp-post-booking');
+      if (whatsappDiv) {
+        whatsappDiv.style.display = 'block';
+        whatsappDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  });
+}
+
+// Esperar a que Cal esté listo
+window.addEventListener('load', () => {
+  if (window.Cal && Cal.ns && Cal.ns["llamada-de-descubrimiento"]) {
+    initCalBookingListener();
+  } else {
+    setTimeout(() => {
+      if (window.Cal && Cal.ns && Cal.ns["llamada-de-descubrimiento"]) {
+        initCalBookingListener();
+      }
+    }, 2000);
+  }
+});
+
 // ── INICIALIZAR ──
 document.addEventListener('DOMContentLoaded', () => {
   createToast();

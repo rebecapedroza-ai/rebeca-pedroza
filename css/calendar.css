@@ -31,3 +31,31 @@
     min-height: 600px;
   }
 }
+
+/* Post-booking WhatsApp */
+#whatsapp-post-booking {
+  animation: fadeUp 0.5s ease both;
+}
+
+.booking-success-msg {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  background: rgba(201,162,74,0.1);
+  border: 1px solid rgba(201,162,74,0.3);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.booking-success-icon {
+  font-size: 1.2rem;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+
+.booking-success-msg p {
+  font-size: 0.82rem;
+  color: var(--cream);
+  line-height: 1.55;
+}
