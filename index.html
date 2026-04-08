@@ -294,11 +294,21 @@
   Cal.ns["llamada-de-descubrimiento"]("on", {
     action: "bookingSuccessfulV2",
     callback: () => {
-      const wp = document.getElementById('whatsapp-post-booking');
-      if (wp) {
-        wp.style.display = 'block';
-        setTimeout(() => wp.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300);
-      }
+      // Cerrar modal de Cal.com simulando clic en botón de cierre
+      setTimeout(() => {
+        const closeBtn = document.querySelector('[data-testid="close-button"], button[aria-label="Close"], .cal-embed-close');
+        if (closeBtn) closeBtn.click();
+
+        // También intentar con ESC
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+
+        // Mostrar WhatsApp
+        const wp = document.getElementById('whatsapp-post-booking');
+        if (wp) {
+          wp.style.display = 'block';
+          setTimeout(() => wp.scrollIntoView({ behavior: 'smooth', block: 'center' }), 500);
+        }
+      }, 800);
     }
   });
 </script>
