@@ -1,5 +1,7 @@
 // ── CONFIG ──
 const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwM9kyFjrCx6pHttOxlfT-6AnNRswAvweEKxo9QvlSCkyPChE-uVl5UPPezMCI0NKRgKA/exec';
+const SUPABASE_URL = 'https://bsyrxfhflfujtujlkeze.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzeXJ4ZmhmbGZ1anR1amxrZXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcwMzQ2NDUsImV4cCI6MjA5MjYxMDY0NX0.Buy_5jilZf7fhkaR8T2EVfoZjn7noLDPFG0AZiAgEyg';
 
 // ── PAÍSES ──
 const COUNTRIES = [
@@ -32,6 +34,7 @@ const COUNTRIES = [
 let selectedCountry = COUNTRIES[0];
 let modalSelectedCountry = COUNTRIES[0];
 
+// ── SELECTOR DE PAÍSES ──
 function renderCountryList(listId, list, currentCode) {
   const container = document.getElementById(listId);
   if (!container) return;
@@ -112,6 +115,7 @@ document.addEventListener('click', (e) => {
   if (modal && e.target === modal) hideModal();
 });
 
+// ── DETECTAR PAÍS POR IP ──
 async function detectCountryByIP() {
   try {
     const res = await fetch('https://ipapi.co/json/');
@@ -179,17 +183,29 @@ function createParticles() {
 }
 createParticles();
 
-// ── SHEETS ──
-async function sendToSheets(data) {
+// ── GUARDAR LEAD ──
+async function saveLead(data) {
   try {
-    await fetch(SHEETS_URL, {
-      method: 'POST', mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
+    await fetch(`${SUPABASE_URL}/rest/v1/leads`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Prefer': 'return=minimal'
+      },
       body: JSON.stringify(data)
     });
-  } catch (err) { console.error('Error Sheets:', err); }
+  } catch (err) { console.error('Error Supabase:', err); }
+
+  fetch(SHEETS_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).catch(() => {});
 }
 
+// ── PILLS ──
 function selectPill(el) {
   const group = el.closest('.pills');
   if (!group) return;
@@ -203,7 +219,7 @@ function getSelectedPills(containerId) {
   return Array.from(container.querySelectorAll('.pill.active')).map(p => p.textContent.trim()).join(', ');
 }
 
-// ── SUBMIT FORM ──
+// ── SUBMIT FORM S3 ──
 async function submitForm() {
   const nombre   = document.getElementById('form-nombre')?.value.trim();
   const email    = document.getElementById('form-email')?.value.trim();
@@ -218,13 +234,21 @@ async function submitForm() {
   btn.textContent = 'Enviando...';
   btn.disabled = true;
 
-  sendToSheets({ nombre, email, whatsapp, tiempo, experiencia });
+  saveLead({ nombre, email, whatsapp, tiempo, experiencia, fuente: 'formulario' });
   sessionStorage.setItem('formCompleted', '1');
   sessionStorage.setItem('leadData', JSON.stringify({ nombre, email, whatsapp }));
-  setTimeout(() => showSuccess(), 600);
+
+  // Flujo según origen:
+  // - Vino del popup "quiero mi llamada" → modal "En breve te llamamos"
+  // - Bajó directo al formulario → modal countdown → calendario
+  if (sessionStorage.getItem('wantsCall') === 'yes') {
+    setTimeout(() => showCallingModal(), 400);
+  } else {
+    setTimeout(() => showSuccess(), 600);
+  }
 }
 
-// ── SUCCESS ──
+// ── SUCCESS (countdown → calendario) ──
 function showSuccess() {
   const overlay = document.getElementById('successOverlay');
   if (!overlay) return;
@@ -246,7 +270,111 @@ function goToCalendar() {
   goTo(3);
 }
 
-// ── TOAST ──
+// ── POPUP BUENAS NOTICIAS (80% del video) ──
+function createNoticePopup() {
+  const popup = document.createElement('div');
+  popup.id = 'noticePopup';
+  popup.className = 'notice-popup-overlay';
+  popup.innerHTML = `
+    <div class="notice-popup">
+      <div class="notice-popup-icon">🎉</div>
+      <div class="notice-popup-eyebrow">¡Buenas noticias!</div>
+      <h2 class="notice-popup-title">Por llegar hasta aquí<br>tenemos algo <em>especial</em> para ti</h2>
+      <p class="notice-popup-sub">Nos gustaría realizarte una llamada, entender tu situación y proponerte exactamente cómo podemos ayudarte a generar ingresos digitales.</p>
+      <p class="notice-popup-question">¿Te gustaría recibir esa llamada?</p>
+      <button class="notice-popup-yes" onclick="closeNoticePopup('yes')">
+        ¡Sí, quiero mi llamada! →
+      </button>
+      <button class="notice-popup-later" onclick="closeNoticePopup('later')">
+        Recibir después
+      </button>
+    </div>
+  `;
+  document.body.appendChild(popup);
+}
+
+function showNoticePopup() {
+  const popup = document.getElementById('noticePopup');
+  if (popup && !sessionStorage.getItem('noticeShown')) {
+    sessionStorage.setItem('noticeShown', '1');
+    popup.classList.add('visible');
+    const iframe = document.querySelector('#s2 iframe');
+    if (iframe) iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+  }
+}
+
+function closeNoticePopup(action) {
+  const popup = document.getElementById('noticePopup');
+  if (popup) popup.classList.remove('visible');
+
+  if (action === 'yes') {
+    sessionStorage.setItem('wantsCall', 'yes');
+    setTimeout(() => goTo(2), 300);
+  } else {
+    // Recibir después → countdown → calendario
+    setTimeout(() => showSuccess(), 300);
+  }
+}
+
+// ── MODAL EN BREVE TE LLAMAMOS ──
+function createCallingModal() {
+  const modal = document.createElement('div');
+  modal.className = 'calling-modal-overlay';
+  modal.id = 'callingModal';
+  modal.innerHTML = `
+    <div class="calling-modal">
+      <div class="calling-icon">📞</div>
+      <div class="calling-eyebrow">¡Todo listo!</div>
+      <h2 class="calling-title">
+        En breve<br>
+        <em>te llamamos</em>
+      </h2>
+      <p class="calling-sub">
+        Uno de nuestros asesores se comunicará contigo en los próximos minutos para entender tu situación y mostrarte exactamente cómo empezar.
+      </p>
+      <div class="calling-number-wrap">
+        <span class="calling-number-label">Nuestro número de contacto</span>
+        <span class="calling-number">+1 218 630 7181</span>
+        <div class="calling-number-actions">
+          <button class="calling-btn-copy" id="copyBtn" onclick="copyNumber()">
+            📋 Copiar número
+          </button>
+          <a class="calling-btn-save"
+             href="data:text/vcard;charset=utf-8,BEGIN:VCARD%0AVERSION:3.0%0AFN:Rebeca+Pedroza+Team%0ATEL:+12186307181%0AEND:VCARD"
+             download="rebeca-pedroza.vcf">
+            💾 Guardar contacto
+          </a>
+        </div>
+      </div>
+      <a href="https://group.wha.link/bWQ6oe" target="_blank" rel="noopener noreferrer" class="btn-whatsapp calling-whatsapp">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.117.549 4.103 1.513 5.831L.057 23.882a.5.5 0 00.611.611l6.051-1.456A11.951 11.951 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.907 0-3.693-.516-5.224-1.415l-.374-.22-3.862.929.929-3.862-.22-.374A9.953 9.953 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        Unirme a la comunidad de WhatsApp
+      </a>
+    </div>
+  `;
+  document.body.appendChild(modal);
+}
+
+function showCallingModal() {
+  const modal = document.getElementById('callingModal');
+  if (modal) modal.classList.add('visible');
+}
+
+function copyNumber() {
+  navigator.clipboard.writeText('+1 218 630 7181').then(() => {
+    const btn = document.getElementById('copyBtn');
+    if (btn) {
+      btn.textContent = '✓ Copiado';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = '📋 Copiar número';
+        btn.classList.remove('copied');
+      }, 2000);
+    }
+  });
+}
+
+// ── TOAST (30s del video) ──
 function createToast() {
   const toast = document.createElement('div');
   toast.className = 'video-toast';
@@ -270,7 +398,7 @@ function hideToast() {
   sessionStorage.setItem('toastDismissed', '1');
 }
 
-// ── MODAL VIDEO ──
+// ── MODAL DEL VIDEO (formulario rápido) ──
 function createModal() {
   const modal = document.createElement('div');
   modal.className = 'video-modal-overlay';
@@ -350,7 +478,7 @@ async function submitModal() {
   btn.textContent = 'Enviando...';
   btn.disabled = true;
 
-  sendToSheets({ nombre, email, whatsapp, tiempo: 'modal video', experiencia: 'modal video' });
+  saveLead({ nombre, email, whatsapp, tiempo: 'modal video', experiencia: 'modal video', fuente: 'modal_video' });
   sessionStorage.setItem('formCompleted', '1');
   hideModal();
   setTimeout(() => showSuccess(), 400);
@@ -373,10 +501,12 @@ function closeVideoModal() {
   overlay.classList.remove('visible');
 }
 
-
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeVideoModal();
+});
 
 // ── YOUTUBE API ──
-let player, toastShown = false, modalShown = false, videoCompleted = false;
+let player, toastShown = false, noticeShown = false, videoCompleted = false;
 
 function onYouTubeIframeAPIReady() {
   const iframe = document.querySelector('#s2 iframe');
@@ -393,8 +523,11 @@ function onPlayerStateChange(event) {
     videoCompleted = true;
     hideToast();
     if (!sessionStorage.getItem('formCompleted')) {
-      if (!sessionStorage.getItem('modalDismissed')) showModal();
-      else setTimeout(() => goTo(2), 500);
+      if (!sessionStorage.getItem('noticeShown')) {
+        showNoticePopup();
+      } else {
+        setTimeout(() => goTo(2), 500);
+      }
     }
   }
 }
@@ -405,8 +538,20 @@ function startProgressCheck() {
     const current = player.getCurrentTime();
     const duration = player.getDuration() || 132;
     const percent = current / duration;
-    if (current >= 30 && !toastShown && !sessionStorage.getItem('toastDismissed')) { toastShown = true; showToast(); }
-    if (percent >= 0.8 && !modalShown && !sessionStorage.getItem('modalDismissed')) { modalShown = true; showModal(); }
+
+    // 30s → toast suave "¿Te está gustando?"
+    if (current >= 30 && !toastShown && !sessionStorage.getItem('toastDismissed')) {
+      toastShown = true;
+      showToast();
+    }
+
+    // 80% → popup buenas noticias
+    if (percent >= 0.8 && !noticeShown && !sessionStorage.getItem('noticeShown')) {
+      noticeShown = true;
+      hideToast();
+      showNoticePopup();
+    }
+
     if (videoCompleted) clearInterval(interval);
   }, 1000);
 }
@@ -415,6 +560,8 @@ function startProgressCheck() {
 document.addEventListener('DOMContentLoaded', () => {
   createToast();
   createModal();
+  createNoticePopup();
+  createCallingModal();
   detectCountryByIP();
   const tag = document.createElement('script');
   tag.src = 'https://www.youtube.com/iframe_api';
