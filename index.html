@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8"/>
+<link rel="icon" type="image/png" href="favicon.png"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="description" content="De limpiar baños a empresaria digital — Rebeca Pedroza"/>
 <title>Rebeca Pedroza</title>
@@ -164,7 +165,7 @@
       <p class="section-sub reveal">Esta llamada es de 10 minutos y es para darte el valor de la inversión en nuestro programa · 100% gratuita.</p>
 
       <button class="btn-primary reveal"
-        data-cal-link="conecta2.ai/llamada-de-descubrimiento"
+        data-cal-link="rebeca-pedroza-tslztk/llamada-de-descubrimiento"
         data-cal-namespace="llamada-de-descubrimiento"
         data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}'>
         Seleccionar mi horario →
@@ -237,6 +238,7 @@
           </div>
         </div>
       </div>
+
       <div class="countries-bar reveal">
         <span class="countries-label">Presentes en</span>
         <span class="country-flag-item">🇨🇴</span>
@@ -248,11 +250,13 @@
         <span class="country-flag-item">🇪🇸</span>
         <span class="country-flag-item">🇨🇱</span>
       </div>
+
       <div class="final-cta reveal">
-        <p class="final-tag">¡AGENDA UNA LLAMADA CON MI EQUIPO!</p>
+        <p class="final-tag">¡AGENDA UNA LLAMADA CON NOSOTROS!</p>
         <h3>¡Quiero empezar ya!</h3>
         <button class="btn-dark" onclick="goTo(2)">Registrarme ahora →</button>
       </div>
+
       <footer>
         <span class="footer-logo">Rebeca Pedroza</span>
         <p class="footer-copy">© 2026 · Todos los derechos reservados</p>
@@ -272,7 +276,6 @@
   </div>
 </div>
 
-
 <script type="text/javascript">
   (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
   Cal("init", "llamada-de-descubrimiento", {origin:"https://app.cal.com"});
@@ -280,21 +283,11 @@
   Cal.ns["llamada-de-descubrimiento"]("on", {
     action: "bookingSuccessfulV2",
     callback: () => {
-      // Cerrar modal de Cal.com simulando clic en botón de cierre
-      setTimeout(() => {
-        const closeBtn = document.querySelector('[data-testid="close-button"], button[aria-label="Close"], .cal-embed-close');
-        if (closeBtn) closeBtn.click();
-
-        // También intentar con ESC
-        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
-
-        // Mostrar WhatsApp
-        const wp = document.getElementById('whatsapp-post-booking');
-        if (wp) {
-          wp.style.display = 'block';
-          setTimeout(() => wp.scrollIntoView({ behavior: 'smooth', block: 'center' }), 500);
-        }
-      }, 800);
+      const wp = document.getElementById('whatsapp-post-booking');
+      if (wp) {
+        wp.style.display = 'block';
+        setTimeout(() => wp.scrollIntoView({ behavior: 'smooth', block: 'center' }), 500);
+      }
     }
   });
 </script>
