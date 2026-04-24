@@ -289,7 +289,7 @@ function createNoticePopup() {
         Recibir después
       </button>
       <button class="notice-popup-keep-watching" onclick="closeNoticePopup('watch')">
-        Seguir viendo
+        ▶ Seguir viendo
       </button>
     </div>
   `;
