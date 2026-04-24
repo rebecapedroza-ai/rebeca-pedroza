@@ -288,6 +288,9 @@ function createNoticePopup() {
       <button class="notice-popup-later" onclick="closeNoticePopup('later')">
         Recibir después
       </button>
+      <button class="notice-popup-keep-watching" onclick="closeNoticePopup('watch')">
+        Seguir viendo
+      </button>
     </div>
   `;
   document.body.appendChild(popup);
@@ -309,9 +312,13 @@ function closeNoticePopup(action) {
   if (action === 'yes') {
     sessionStorage.setItem('wantsCall', 'yes');
     setTimeout(() => goTo(2), 300);
-  } else {
+  } else if (action === 'later') {
     // Recibir después → countdown → calendario
     setTimeout(() => showSuccess(), 300);
+  } else {
+    // Seguir viendo → solo cerrar el popup, reanudar video
+    const iframe = document.querySelector('#s2 iframe');
+    if (iframe) iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
   }
 }
 
