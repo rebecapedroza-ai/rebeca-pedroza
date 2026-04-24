@@ -111,8 +111,6 @@ function closeDropdown(ddId, searchId) {
 document.addEventListener('click', (e) => {
   const sel = document.querySelector('.country-selector');
   if (sel && !sel.contains(e.target)) closeDropdown('country-dropdown', 'country-search');
-  const modal = document.getElementById('videoModal');
-  if (modal && e.target === modal) hideModal();
 });
 
 // ── DETECTAR PAÍS POR IP ──
@@ -238,9 +236,6 @@ async function submitForm() {
   sessionStorage.setItem('formCompleted', '1');
   sessionStorage.setItem('leadData', JSON.stringify({ nombre, email, whatsapp }));
 
-  // Flujo según origen:
-  // - Vino del popup "quiero mi llamada" → modal "En breve te llamamos"
-  // - Bajó directo al formulario → modal countdown → calendario
   if (sessionStorage.getItem('wantsCall') === 'yes') {
     setTimeout(() => showCallingModal(), 400);
   } else {
@@ -270,7 +265,30 @@ function goToCalendar() {
   goTo(3);
 }
 
-// ── POPUP BUENAS NOTICIAS (80% del video) ──
+// ── TOAST (aparece a los 30s) ──
+function createToast() {
+  const toast = document.createElement('div');
+  toast.className = 'video-toast';
+  toast.id = 'videoToast';
+  toast.innerHTML = `
+    <span class="video-toast-text">¿Te está gustando?</span>
+    <button class="video-toast-btn" onclick="hideToast(); showNoticePopup();">Quiero más info</button>
+    <button class="video-toast-close" onclick="hideToast()">✕</button>
+  `;
+  document.body.appendChild(toast);
+}
+
+function showToast() {
+  const toast = document.getElementById('videoToast');
+  if (toast) toast.classList.add('visible');
+}
+
+function hideToast() {
+  const toast = document.getElementById('videoToast');
+  if (toast) toast.classList.remove('visible');
+}
+
+// ── POPUP BUENAS NOTICIAS (3 CTAs) ──
 function createNoticePopup() {
   const popup = document.createElement('div');
   popup.id = 'noticePopup';
@@ -298,11 +316,10 @@ function createNoticePopup() {
 
 function showNoticePopup() {
   const popup = document.getElementById('noticePopup');
-  if (popup) {
-    popup.classList.add('visible');
-    const iframe = document.querySelector('#s2 iframe');
-    if (iframe) iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-  }
+  if (!popup) return;
+  popup.classList.add('visible');
+  const iframe = document.querySelector('#s2 iframe');
+  if (iframe) iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
 }
 
 function closeNoticePopup(action) {
@@ -313,10 +330,9 @@ function closeNoticePopup(action) {
     sessionStorage.setItem('wantsCall', 'yes');
     setTimeout(() => goTo(2), 300);
   } else if (action === 'later') {
-    // Recibir después → countdown → calendario
     setTimeout(() => showSuccess(), 300);
   } else {
-    // Seguir viendo → solo cerrar el popup, reanudar video
+    // Seguir viendo → reanudar video
     const iframe = document.querySelector('#s2 iframe');
     if (iframe) iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
   }
@@ -380,115 +396,6 @@ function copyNumber() {
   });
 }
 
-// ── TOAST (30s del video) ──
-function createToast() {
-  const toast = document.createElement('div');
-  toast.className = 'video-toast';
-  toast.id = 'videoToast';
-  toast.innerHTML = `
-    <span class="video-toast-text">¿Te está gustando?</span>
-    <button class="video-toast-btn" onclick="showModal()">Quiero más info</button>
-    <button class="video-toast-close" onclick="hideToast()">✕</button>
-  `;
-  document.body.appendChild(toast);
-}
-
-function showToast() {
-  const toast = document.getElementById('videoToast');
-  if (toast) toast.classList.add('visible');
-}
-
-function hideToast() {
-  const toast = document.getElementById('videoToast');
-  if (toast) toast.classList.remove('visible');
-}
-
-// ── MODAL DEL VIDEO (formulario rápido) ──
-function createModal() {
-  const modal = document.createElement('div');
-  modal.className = 'video-modal-overlay';
-  modal.id = 'videoModal';
-  modal.innerHTML = `
-    <div class="video-modal">
-      <button class="video-modal-close" onclick="hideModal()">✕</button>
-      <div class="video-modal-eyebrow">Paso 1 de 3</div>
-      <h2 class="video-modal-title">Dejame<br><em>tus datos</em></h2>
-      <p class="video-modal-sub">Solo 60 segundos — el primer paso real.</p>
-      <div class="field">
-        <label>Nombre completo</label>
-        <input type="text" id="modal-nombre" placeholder="¿Cómo te llaman?" />
-      </div>
-      <div class="field">
-        <label>Email</label>
-        <input type="email" id="modal-email" placeholder="tu@email.com" />
-      </div>
-      <div class="field">
-        <label>WhatsApp</label>
-        <div class="phone-wrap">
-          <div class="country-selector">
-            <button class="country-btn" onclick="toggleModalDropdown()" type="button">
-              <span class="country-flag" id="modal-selected-flag">🇨🇴</span>
-              <span class="country-code" id="modal-selected-code">+57</span>
-              <span class="country-arrow">▼</span>
-            </button>
-            <div class="country-dropdown" id="modal-country-dropdown">
-              <input class="country-search" placeholder="Buscar país..." oninput="filterModalCountries(this.value)" />
-              <div class="country-list" id="modal-country-list"></div>
-            </div>
-          </div>
-          <div class="phone-input">
-            <input type="tel" id="modal-whatsapp" placeholder="300 000 0000" />
-          </div>
-        </div>
-      </div>
-      <button class="video-modal-submit" id="modal-submit-btn" onclick="submitModal()">
-        Quiero agendar mi llamada →
-      </button>
-      <button class="video-modal-skip" onclick="hideModal()">
-        Ahora no, seguir viendo
-      </button>
-    </div>
-  `;
-  document.body.appendChild(modal);
-}
-
-function showModal() {
-  hideToast();
-  const modal = document.getElementById('videoModal');
-  if (modal && !sessionStorage.getItem('modalDismissed')) {
-    modal.classList.add('visible');
-    document.getElementById('modal-selected-flag').textContent = selectedCountry.flag;
-    document.getElementById('modal-selected-code').textContent = selectedCountry.dial;
-    modalSelectedCountry = selectedCountry;
-    const iframe = document.querySelector('#s2 iframe');
-    if (iframe) iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-  }
-}
-
-function hideModal() {
-  const modal = document.getElementById('videoModal');
-  if (modal) modal.classList.remove('visible');
-  sessionStorage.setItem('modalDismissed', '1');
-}
-
-async function submitModal() {
-  const nombre   = document.getElementById('modal-nombre')?.value.trim();
-  const email    = document.getElementById('modal-email')?.value.trim();
-  const numero   = document.getElementById('modal-whatsapp')?.value.trim();
-  const whatsapp = modalSelectedCountry.dial + numero;
-
-  if (!nombre || !email || !numero) { alert('Por favor completá todos los campos.'); return; }
-
-  const btn = document.getElementById('modal-submit-btn');
-  btn.textContent = 'Enviando...';
-  btn.disabled = true;
-
-  saveLead({ nombre, email, whatsapp, tiempo: 'modal video', experiencia: 'modal video', fuente: 'modal_video' });
-  sessionStorage.setItem('formCompleted', '1');
-  hideModal();
-  setTimeout(() => showSuccess(), 400);
-}
-
 // ── VIDEO MODAL TESTIMONIOS ──
 function openVideoModal(videoId) {
   const overlay = document.getElementById('testiModal');
@@ -540,13 +447,13 @@ function startProgressCheck() {
     const duration = player.getDuration() || 132;
     const percent = current / duration;
 
-    // 30s → toast suave "¿Te está gustando?"
+    // 30s → toast "¿Te está gustando?"
     if (current >= 30 && !toastShown) {
       toastShown = true;
       showToast();
     }
 
-    // 80% → popup buenas noticias
+    // 80% → popup buenas noticias automático
     if (percent >= 0.8 && !noticeShown) {
       noticeShown = true;
       hideToast();
@@ -560,7 +467,6 @@ function startProgressCheck() {
 // ── INICIALIZAR ──
 document.addEventListener('DOMContentLoaded', () => {
   createToast();
-  createModal();
   createNoticePopup();
   createCallingModal();
   detectCountryByIP();
