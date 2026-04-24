@@ -1,0 +1,287 @@
+/* ===========================
+   NOTICE POPUP
+   =========================== */
+
+.notice-popup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 600;
+  background: rgba(10,6,4,0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  backdrop-filter: blur(6px);
+}
+
+.notice-popup-overlay.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.notice-popup {
+  background: var(--cream);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 480px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  transform: translateY(20px);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.notice-popup-overlay.visible .notice-popup {
+  transform: translateY(0);
+}
+
+.notice-popup-icon {
+  font-size: 3.1rem;
+  line-height: 1;
+}
+
+.notice-popup-eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.notice-popup-title {
+  font-family: var(--serif);
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
+  font-weight: 300;
+  line-height: 1.05;
+  color: var(--black);
+}
+
+.notice-popup-title em {
+  font-style: italic;
+  color: var(--brown2);
+}
+
+.notice-popup-sub {
+  font-size: 1.06rem;
+  line-height: 1.65;
+  color: var(--muted);
+  max-width: 380px;
+}
+
+.notice-popup-question {
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--black);
+  margin-top: 0.5rem;
+}
+
+.notice-popup-yes {
+  width: 100%;
+  padding: 1rem;
+  background: var(--black);
+  color: var(--gold);
+  border: none;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  transition: all 0.3s;
+  box-shadow: 0 0 15px rgba(201,162,74,0.2);
+}
+
+.notice-popup-yes:hover {
+  opacity: 0.85;
+  box-shadow: 0 0 25px rgba(201,162,74,0.4);
+}
+
+.notice-popup-later {
+  background: none;
+  border: none;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--muted);
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.notice-popup-later:hover {
+  color: var(--black);
+}
+
+
+/* ===========================
+   MODAL EN BREVE TE LLAMAMOS
+   =========================== */
+
+.calling-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 700;
+  background: var(--black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+
+.calling-modal-overlay.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.calling-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.4rem;
+  max-width: 480px;
+  width: 100%;
+  transform: translateY(20px);
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.calling-modal-overlay.visible .calling-modal {
+  transform: translateY(0);
+}
+
+.calling-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: var(--gold);
+  box-shadow: 0 0 0 0 rgba(201,162,74,0.4), 0 0 40px rgba(201,162,74,0.2);
+  animation: pulse-ring 2s ease infinite;
+}
+
+.calling-eyebrow {
+  font-size: 0.68rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.calling-title {
+  font-family: var(--serif);
+  font-size: clamp(2.6rem, 8vw, 4rem);
+  font-weight: 300;
+  line-height: 0.95;
+  color: var(--cream);
+}
+
+.calling-title em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.calling-sub {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(245,237,224,0.65);
+  max-width: 380px;
+}
+
+/* Número de contacto */
+.calling-number-wrap {
+  background: rgba(201,162,74,0.08);
+  border: 1px solid rgba(201,162,74,0.25);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.calling-number-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.calling-number {
+  font-family: var(--serif);
+  font-size: clamp(1.8rem, 5vw, 2.5rem);
+  font-weight: 300;
+  color: var(--gold);
+  letter-spacing: 0.05em;
+}
+
+.calling-number-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.calling-btn-copy {
+  padding: 0.5rem 1.2rem;
+  border: 1px solid rgba(201,162,74,0.4);
+  background: transparent;
+  color: var(--gold);
+  font-family: var(--sans);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.calling-btn-copy:hover {
+  background: rgba(201,162,74,0.1);
+}
+
+.calling-btn-copy.copied {
+  background: rgba(201,162,74,0.15);
+  color: var(--gold2);
+}
+
+.calling-btn-save {
+  padding: 0.5rem 1.2rem;
+  background: var(--gold);
+  color: var(--black);
+  border: none;
+  font-family: var(--sans);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.calling-btn-save:hover { opacity: 0.85; }
+
+/* WhatsApp CTA */
+.calling-whatsapp {
+  width: 100%;
+}
+
+@media (max-width: 767px) {
+  .calling-title {
+    font-size: clamp(2.2rem, 10vw, 3rem);
+  }
+}
