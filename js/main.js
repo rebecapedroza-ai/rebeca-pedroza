@@ -224,7 +224,7 @@ async function submitForm() {
   const nombre   = document.getElementById('form-nombre')?.value.trim();
   const email    = document.getElementById('form-email')?.value.trim();
   const numero   = document.getElementById('form-whatsapp')?.value.trim();
-  const whatsapp = selectedCountry.dial.replace('+', '') + ' ' + numero;
+  const whatsapp = selectedCountry.dial + numero;
   const tiempo      = getSelectedPills('pills-tiempo');
   const experiencia = getSelectedPills('pills-experiencia');
 
@@ -468,7 +468,7 @@ async function submitModal() {
   const nombre   = document.getElementById('modal-nombre')?.value.trim();
   const email    = document.getElementById('modal-email')?.value.trim();
   const numero   = document.getElementById('modal-whatsapp')?.value.trim();
-  const whatsapp = modalSelectedCountry.dial.replace('+', '') + ' ' + numero;
+  const whatsapp = modalSelectedCountry.dial + numero;
 
   if (!nombre || !email || !numero) { alert('Por favor completá todos los campos.'); return; }
 
