@@ -295,8 +295,7 @@ function createNoticePopup() {
 
 function showNoticePopup() {
   const popup = document.getElementById('noticePopup');
-  if (popup && !sessionStorage.getItem('noticeShown')) {
-    sessionStorage.setItem('noticeShown', '1');
+  if (popup) {
     popup.classList.add('visible');
     const iframe = document.querySelector('#s2 iframe');
     if (iframe) iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
@@ -389,13 +388,12 @@ function createToast() {
 
 function showToast() {
   const toast = document.getElementById('videoToast');
-  if (toast && !sessionStorage.getItem('toastDismissed')) toast.classList.add('visible');
+  if (toast) toast.classList.add('visible');
 }
 
 function hideToast() {
   const toast = document.getElementById('videoToast');
   if (toast) toast.classList.remove('visible');
-  sessionStorage.setItem('toastDismissed', '1');
 }
 
 // ── MODAL DEL VIDEO (formulario rápido) ──
@@ -523,11 +521,7 @@ function onPlayerStateChange(event) {
     videoCompleted = true;
     hideToast();
     if (!sessionStorage.getItem('formCompleted')) {
-      if (!sessionStorage.getItem('noticeShown')) {
-        showNoticePopup();
-      } else {
-        setTimeout(() => goTo(2), 500);
-      }
+      showNoticePopup();
     }
   }
 }
@@ -540,13 +534,13 @@ function startProgressCheck() {
     const percent = current / duration;
 
     // 30s → toast suave "¿Te está gustando?"
-    if (current >= 30 && !toastShown && !sessionStorage.getItem('toastDismissed')) {
+    if (current >= 30 && !toastShown) {
       toastShown = true;
       showToast();
     }
 
     // 80% → popup buenas noticias
-    if (percent >= 0.8 && !noticeShown && !sessionStorage.getItem('noticeShown')) {
+    if (percent >= 0.8 && !noticeShown) {
       noticeShown = true;
       hideToast();
       showNoticePopup();
